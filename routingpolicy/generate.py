@@ -36,7 +36,7 @@ async def communities(
 
     participant_comms = template_env.get_template("participant-communities.j2")
     result = await participant_comms.render_async(p=participant)
-    output_file = TARGET_DIR / f"communities-{participant.asn}"
+    output_file = TARGET_DIR / f"communities-{participant.asn}.ios"
 
     log.debug(result)
 
@@ -64,7 +64,7 @@ async def route_map(
     result = await participant_route_map.render_async(
         p=participant, rs=rs_id, loc=loc_id, metro=metro_id
     )
-    output_file = TARGET_DIR / f"route-map-{participant.asn}"
+    output_file = TARGET_DIR / f"route-map-{participant.asn}.ios"
 
     log.debug(result)
 
@@ -90,7 +90,7 @@ async def prefixes(participant: Participant) -> None:
         max_ipv6=params.max_length.ipv6,
         template_env=template_env,
     ):
-        output_file = TARGET_DIR / f"prefix-list{family}-{participant.asn}"
+        output_file = TARGET_DIR / f"prefix-list{family}-{participant.asn}.ios"
         log.debug(rendered)
         with output_file.open("w") as of:
             of.write(await rendered)
