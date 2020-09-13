@@ -1,4 +1,4 @@
-! 48 IX Participant IPv4 Prefix List
+! 48 IX IPv4 Prefix List for Stellar (AS14525)
 !
 ip prefix-list ipv4-14525 permit 199.34.92.0/22 le 24
 ip prefix-list ipv4-14525 permit 199.34.93.0/24

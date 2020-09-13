@@ -1,4 +1,4 @@
-! 48 IX Participant Specific BGP Communities
+! 48 IX BGP Communities for Stellar (AS14525)
 !
 ! Export Only
 ! When attached to a route, the route will only be propagated to the particpant p.asn specified and suppressed to all others.

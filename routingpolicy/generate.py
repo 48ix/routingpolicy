@@ -1,6 +1,7 @@
 """Generate 48 IX Route Server Configs."""
 
 # Standard Library
+import asyncio
 from pathlib import Path
 
 # Third Party
@@ -28,76 +29,117 @@ def verify_complete(file: Path) -> bool:
     return complete
 
 
+def create_file_structure() -> bool:
+    """Gracefully create output policy file structure."""
+    for rs in params.route_servers:
+        rs_dir = TARGET_DIR / rs.name
+        if not rs_dir.exists():
+            log.debug("Creating {}", str(rs_dir))
+            rs_dir.mkdir()
+        for participant in params.participants:
+            participant_dir = rs_dir / str(participant.asn)
+            if not participant_dir.exists():
+                log.debug("Creating {}", str(participant_dir))
+                participant_dir.mkdir()
+    return True
+
+
 async def communities(
     participant: Participant,
 ) -> None:
     """Generate Participant-specific BGP Community Lists."""
     log.info("Generating Communities for AS{}: {}", participant.asn, participant.name)
+    create_file_structure()
 
     participant_comms = template_env.get_template("participant-communities.j2")
-    result = await participant_comms.render_async(p=participant)
-    output_file = TARGET_DIR / f"communities-{participant.asn}.ios"
 
-    log.debug(result)
-
-    with output_file.open("w+") as of:
-        of.write(result)
-    if verify_complete(output_file):
-        log.success(
-            "Generated Communities for AS{}: {} at {}",
-            participant.asn,
-            participant.name,
-            str(output_file),
+    for rs in params.route_servers:
+        result = await participant_comms.render_async(p=participant)
+        output_file = TARGET_DIR / rs.name / str(participant.asn) / "communities.ios"
+        log.debug(
+            "Communities for AS{}: {}\n{}", participant.asn, participant.name, result
         )
+        with output_file.open("w+") as of:
+            of.write(result)
+        if verify_complete(output_file):
+            log.success(
+                "Generated Communities for AS{}: {} at {}",
+                participant.asn,
+                participant.name,
+                str(output_file),
+            )
 
 
-async def route_map(
-    participant: Participant,
-    rs_id: int,
-    loc_id: int,
-    metro_id: int,
-) -> None:
+async def route_map(participant: Participant) -> None:
     """Generate Participant-specific Route Maps."""
     log.info("Generating Route Maps for AS{}: {}", participant.asn, participant.name)
-
+    create_file_structure()
     participant_route_map = template_env.get_template("participant-route-map.j2")
-    result = await participant_route_map.render_async(
-        p=participant, rs=rs_id, loc=loc_id, metro=metro_id
-    )
-    output_file = TARGET_DIR / f"route-map-{participant.asn}.ios"
+    for rs in params.route_servers:
 
-    log.debug(result)
-
-    with output_file.open("w+") as of:
-        of.write(result)
-
-    if verify_complete(output_file):
-        log.success(
-            "Generated Route Maps for AS{}: {} at {}",
-            participant.asn,
-            participant.name,
-            str(output_file),
+        result = await participant_route_map.render_async(
+            p=participant, rs=rs.id, loc=rs.loc_id, metro=rs.metro_id
         )
+        output_file = TARGET_DIR / rs.name / str(participant.asn) / "route-map.ios"
+
+        log.debug(
+            "Route Maps for AS{}: {}\n{}", participant.asn, participant.name, result
+        )
+
+        with output_file.open("w+") as of:
+            of.write(result)
+
+        if verify_complete(output_file):
+            log.success(
+                "Generated Route Maps for AS{}: {} at {}",
+                participant.asn,
+                participant.name,
+                str(output_file),
+            )
 
 
 async def prefixes(participant: Participant) -> None:
     """Generate Participant-specific Prefix Lists."""
     log.info("Generating Prefix Lists for AS{}: {}", participant.asn, participant.name)
+    create_file_structure()
+    for rs in params.route_servers:
+        async for family, render in render_prefixes(
+            participant,
+            max_ipv4=params.max_length.ipv4,
+            max_ipv6=params.max_length.ipv6,
+            template_env=template_env,
+        ):
+            output_file = (
+                TARGET_DIR
+                / rs.name
+                / str(participant.asn)
+                / f"prefix-list-ipv{family}.ios"
+            )
+            rendered = await render
 
-    async for family, rendered in render_prefixes(
-        participant,
-        max_ipv4=params.max_length.ipv4,
-        max_ipv6=params.max_length.ipv6,
-        template_env=template_env,
-    ):
-        output_file = TARGET_DIR / f"prefix-list{family}-{participant.asn}.ios"
-        log.debug(rendered)
-        with output_file.open("w") as of:
-            of.write(await rendered)
-        if verify_complete(output_file):
-            log.success(
-                "Generated Prefix Lists for AS{}: {} at {}",
+            log.debug(
+                "IPv{} Prefix List for AS{}: {}\n{}",
+                family,
                 participant.asn,
                 participant.name,
-                str(output_file),
+                rendered,
             )
+
+            with output_file.open("w") as of:
+                of.write(rendered)
+
+            if verify_complete(output_file):
+                log.success(
+                    "Generated IPv{} Prefix Lists for AS{}: {} at {}",
+                    family,
+                    participant.asn,
+                    participant.name,
+                    str(output_file),
+                )
+
+
+async def generate_all() -> None:
+    """Generate all templates for all route route servers and participants."""
+    coros = (communities, route_map, prefixes)
+    tasks = (c(p) for c in coros for p in params.participants)
+    await asyncio.gather(*tasks)

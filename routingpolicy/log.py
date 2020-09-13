@@ -24,7 +24,7 @@ _LOG_LEVELS = [
 
 
 def base_logger() -> LoguruLogger:
-    """Initialize hyperglass logging instance."""
+    """Initialize logging instance."""
     _loguru_logger.remove()
     _loguru_logger.add(sys.stdout, format=_LOG_FMT, level="INFO", enqueue=True)
     _loguru_logger.configure(levels=_LOG_LEVELS)  # type: ignore
@@ -37,7 +37,7 @@ log = base_logger()
 def set_log_level(logger: LoguruLogger, debug: bool) -> bool:
     """Set log level based on debug state."""
     if debug:
-        os.environ["HYPERGLASS_AGENT_LOG_LEVEL"] = "DEBUG"
+        os.environ["48IX_ROUTING_POLICY"] = "DEBUG"
         logger.remove()
         logger.add(sys.stdout, format=_LOG_FMT, level="DEBUG", enqueue=True)
         logger.configure(levels=_LOG_LEVELS)

@@ -1,17 +1,12 @@
-"""Query & parse data from bgp.tools.
-
-- See https://bgp.tools/credits for acknowledgements and licensing.
-- See https://bgp.tools/kb/api for query documentation.
-"""
+"""Query & parse data from IRRd server."""
 
 # Standard Library
-import re
 import asyncio
-from typing import Dict, List, Tuple, Union, Optional, Awaitable, AsyncGenerator
-from ipaddress import IPv4Network, IPv6Address, ip_network
+from typing import Tuple, Awaitable, AsyncGenerator
+from ipaddress import ip_network
 
 # Third Party
-from jinja2 import Template, Environment
+from jinja2 import Environment
 
 # Project
 from routingpolicy.log import log
@@ -66,5 +61,5 @@ async def render_prefixes(
         max_len = {4: max_ipv4, 6: max_ipv6}[family]
         prefix_list = template_env.get_template(f"participant-prefix-list{family}.j2")
         yield family, prefix_list.render_async(
-            prefixes=prefixes, asn=str(participant.asn), max_len=max_len
+            p=participant, prefixes=prefixes, max_len=max_len
         )
