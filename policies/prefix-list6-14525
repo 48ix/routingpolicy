@@ -1,0 +1,6 @@
+! 48 IX Participant IPv6 Prefix List
+!
+ipv6 prefix-list ipv4-14525 permit 2604:c0c0:1000::/36 le 48
+ipv6 prefix-list ipv4-14525 permit 2604:c0c0::/32 le 48
+ipv6 prefix-list ipv4-14525 permit 2604:c0c0:5000::/36 le 48
+ipv6 prefix-list ipv4-14525 permit 2604:c0c0:3000::/36 le 48

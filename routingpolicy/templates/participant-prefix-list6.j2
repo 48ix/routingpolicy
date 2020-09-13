@@ -1,0 +1,10 @@
+! 48 IX Participant IPv6 Prefix List
+!
+{% for prefix in prefixes %}
+{% if prefix.prefixlen < max_len %}
+ipv6 prefix-list ipv4-{{ asn }} permit {{ prefix }} le {{ max_len }}
+{% else %}
+ipv6 prefix-list ipv4-{{ asn }} permit {{ prefix }}
+{% endif %}
+{% endfor %}
+!

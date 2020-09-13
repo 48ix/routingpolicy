@@ -1,0 +1,34 @@
+! 48 IX Global Community Lists
+!
+bgp community-list expanded 48ix-allowed-communities permit 0:.+
+bgp community-list expanded 48ix-allowed-communities permit 62484:.+
+bgp community-list expanded 48ix-denied-communities deny 0:.+
+bgp community-list expanded 48ix-denied-communities deny 62484:.+
+bgp community-list standard 48ix-all permit 62484:0
+bgp community-list expanded 48ix-exportonly-any permit ^62484:(6451[2-9]|645[2-9][0-9]|64[6-9][0-9][0-9]|6553[0-5]|655[0-2][0-9]|65[0-4][0-9][0-9])$
+bgp community-list expanded 48ix-exportonly-any permit ^62484:[0-9]+$
+bgp extcommunity-list expanded 48ix-exportonly-any permit ^[Rr][Tt]|[Ss][Oo][Oo]:62484:(42[0-9]{8}|6451[2-9]|645[2-9][0-9]|64[6-9][0-9][0-9]|6553[0-5]|655[0-2][0-9]|65[0-4][0-9][0-9])$
+bgp extcommunity-list expanded 48ix-exportonly-any permit ^[Rr][Tt]|[Ss][Oo][Oo]:62484:[0-9]+$
+bgp extcommunity-list expanded 48ix-allowed-ext-communities permit ^[Rr][Tt]|[Ss][Oo][Oo]:0:.+$
+bgp extcommunity-list expanded 48ix-allowed-ext-communities permit ^[Rr][Tt]|[Ss][Oo][Oo]:62484:.+$
+bgp extcommunity-list expanded 48ix-allowed-ext-communities permit ^[Rr][Tt]|[Ss][Oo][Oo]:64801:.+$
+bgp extcommunity-list expanded 48ix-allowed-ext-communities permit ^[Rr][Tt]|[Ss][Oo][Oo]:64802:.+$
+bgp extcommunity-list expanded 48ix-allowed-ext-communities permit ^[Rr][Tt]|[Ss][Oo][Oo]:64803:.+$
+bgp extcommunity-list expanded 48ix-denied-ext-communities deny ^[Rr][Tt]|[Ss][Oo][Oo]:0:.+$
+bgp extcommunity-list expanded 48ix-denied-ext-communities deny ^[Rr][Tt]|[Ss][Oo][Oo]:62484:.+$
+bgp extcommunity-list expanded 48ix-denied-ext-communities deny ^[Rr][Tt]|[Ss][Oo][Oo]:64801:.+$
+bgp extcommunity-list expanded 48ix-denied-ext-communities deny ^[Rr][Tt]|[Ss][Oo][Oo]:64802:.+$
+bgp extcommunity-list expanded 48ix-denied-ext-communities deny ^[Rr][Tt]|[Ss][Oo][Oo]:64803:.+$
+bgp large-community-list expanded 48ix-exportonly-any deny ^62484:1:(42[0-9]{8}|6451[2-9]|645[2-9][0-9]|64[6-9][0-9][0-9]|6553[0-5]|655[0-2][0-9]|65[0-4][0-9][0-9])$
+bgp large-community-list expanded 48ix-exportonly-any permit ^62484:1:[0-9]+$
+bgp large-community-list expanded 48ix-allowed-large-communities permit 62484:0:.+
+bgp large-community-list expanded 48ix-allowed-large-communities permit 62484:62484:.+
+bgp large-community-list expanded 48ix-allowed-large-communities permit 62484:64801:.+
+bgp large-community-list expanded 48ix-allowed-large-communities permit 62484:64802:.+
+bgp large-community-list expanded 48ix-allowed-large-communities permit 62484:64803:.+
+bgp large-community-list expanded 48ix-denied-large-communities deny 62484:0:.+
+bgp large-community-list expanded 48ix-denied-large-communities deny 62484:62484:.+
+bgp large-community-list expanded 48ix-denied-large-communities deny 62484:64801:.+
+bgp large-community-list expanded 48ix-denied-large-communities deny 62484:64802:.+
+bgp large-community-list expanded 48ix-denied-large-communities deny 62484:64803:.+
+!

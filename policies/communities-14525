@@ -1,0 +1,40 @@
+! 48 IX Participant Specific BGP Communities
+!
+! Export Only
+! When attached to a route, the route will only be propagated to the particpant p.asn specified and suppressed to all others.
+!
+bgp community-list standard 48ix-exportonly-14525 permit 62484:14525
+bgp extcommunity-list expanded 48ix-exportonly-14525 permit ^[Rr][Tt]|[Ss][Oo][Oo]:62484:14525$
+bgp large-community-list standard 48ix-exportonly-14525 permit 62484:1:14525
+!
+! No Export
+!
+bgp community-list standard 48ix-noexport-14525 permit 0:14525
+bgp extcommunity-list standard 48ix-noexport-14525 permit rt 0:14525
+bgp extcommunity-list standard 48ix-noexport-14525 permit soo 0:14525
+bgp large-community-list standard 48ix-noexport-14525 permit 62484:0:14525
+!
+! Prepend
+!
+bgp community-list standard 48ix-prepend1-14525 permit 62484:64801
+bgp community-list standard 48ix-prepend2-14525 permit 62484:64802
+bgp community-list standard 48ix-prepend3-14525 permit 62484:64803
+bgp extcommunity-list standard 48ix-prepend1-14525 permit rt 62484:64801
+bgp extcommunity-list standard 48ix-prepend1-14525 permit soo 62484:64801
+bgp extcommunity-list standard 48ix-prepend1-14525 permit rt 64801:14525
+bgp extcommunity-list standard 48ix-prepend1-14525 permit soo 64801:14525
+bgp extcommunity-list standard 48ix-prepend2-14525 permit rt 62484:64802
+bgp extcommunity-list standard 48ix-prepend2-14525 permit soo 62484:64802
+bgp extcommunity-list standard 48ix-prepend2-14525 permit rt 64802:14525
+bgp extcommunity-list standard 48ix-prepend2-14525 permit soo 64802:14525
+bgp extcommunity-list standard 48ix-prepend3-14525 permit rt 62484:64803
+bgp extcommunity-list standard 48ix-prepend3-14525 permit soo 62484:64803
+bgp extcommunity-list standard 48ix-prepend3-14525 permit rt 64803:14525
+bgp extcommunity-list standard 48ix-prepend3-14525 permit soo 64803:14525
+bgp large-community-list standard 48ix-prepend1-14525 permit 62484:62484:64801
+bgp large-community-list standard 48ix-prepend1-14525 permit 62484:64801:14525
+bgp large-community-list standard 48ix-prepend2-14525 permit 62484:62484:64802
+bgp large-community-list standard 48ix-prepend2-14525 permit 62484:64802:14525
+bgp large-community-list standard 48ix-prepend3-14525 permit 62484:62484:64803
+bgp large-community-list standard 48ix-prepend3-14525 permit 62484:64803:14525
+!
