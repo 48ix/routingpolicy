@@ -91,12 +91,14 @@ route-map 14525-in deny 110
 !
 route-map 14525-in permit 200
  match ip address prefix-list ipv4-14525
+ match ip next-hop prefix-list ipv4-14525-nexthop
  set comm-list 48ix-denied-communities delete
  set large-comm-list 48ix-denied-large-communities delete
  on-match goto 991
 !
 route-map 14525-in permit 205
  match ipv6 address prefix-list ipv6-14525
+ match ipv6 next-hop 2001:504:14::1:4525:1
  set comm-list 48ix-denied-communities delete
  set large-comm-list 48ix-denied-large-communities delete
  on-match goto 991

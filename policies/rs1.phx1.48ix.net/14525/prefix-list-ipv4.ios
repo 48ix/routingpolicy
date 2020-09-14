@@ -1,4 +1,5 @@
-! Stellar (AS14525) IPv4 Prefix List
+! Stellar (AS14525) IPv4 Prefix Lists
+ip prefix-list ipv4-14525-nexthop permit 149.112.3.11/32
 ip prefix-list ipv4-14525 permit 199.34.92.0/22 le 24
 ip prefix-list ipv4-14525 permit 199.34.93.0/24
 ip prefix-list ipv4-14525 permit 199.34.95.0/24
