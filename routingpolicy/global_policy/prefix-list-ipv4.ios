@@ -12,5 +12,7 @@ ip prefix-list bogons4 seq 50 permit 198.18.0.0/15 le 32
 ip prefix-list bogons4 seq 55 permit 198.51.100.0/24 le 32
 ip prefix-list bogons4 seq 60 permit 203.0.113.0/24 le 32
 ip prefix-list bogons4 seq 65 permit 224.0.0.0/3 le 32
+ip prefix-list participant4-in seq 5 deny 149.112.3.0/24
+ip prefix-list participant4-in seq 10 permit 0.0.0.0/0 ge 8 le 24
 ip prefix-list dfz4 seq 5 permit 0.0.0.0/0 ge 8 le 24
 !

@@ -1,0 +1,3 @@
+! Global Route Maps
+route-map deny-all deny 10
+!

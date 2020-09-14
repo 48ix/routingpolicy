@@ -1,9 +1,14 @@
-! {{ p.name }} (AS{{ p.asn }}) IPv6 Prefix List
+! {{ p.name }} (AS{{ p.asn }}) IPv6 Prefix Lists
+{# IPv6 next-hop prefix-list won't be used until FRR supports prefix-list next-hop
+matching in route-maps. #}
+{% for addr in p.ipv6 %}
+ipv6 prefix-list ipv6-{{ p.asn }}-nexthop permit {{ addr }}/128
+{% endfor %}
 {% for prefix in prefixes %}
 {% if prefix.prefixlen < max_len %}
-ipv6 prefix-list ipv4-{{ p.asn }} permit {{ prefix }} le {{ max_len }}
+ipv6 prefix-list ipv6-{{ p.asn }} permit {{ prefix }} le {{ max_len }}
 {% else %}
-ipv6 prefix-list ipv4-{{ p.asn }} permit {{ prefix }}
+ipv6 prefix-list ipv6-{{ p.asn }} permit {{ prefix }}
 {% endif %}
 {% endfor %}
 !

@@ -91,15 +91,21 @@ route-map {{ p.asn }}-in deny 110
 !
 route-map {{ p.asn }}-in permit 200
  match ip address prefix-list ipv4-{{ p.asn }}
+ match ip next-hop prefix-list ipv4-{{ p.asn }}-nexthop
  set comm-list 48ix-denied-communities delete
  set large-comm-list 48ix-denied-large-communities delete
  on-match goto 991
 !
-route-map {{ p.asn }}-in permit 205
+{# Because FRR doesn't support IPv6 next-hop matching based on prefix list, iterate
+through IPv6 addresses and generate a route-map statement for each address. #}
+{% for addr in p.ipv6 %}
+route-map {{ p.asn }}-in permit {{ 200 + (5 * loop.index ) }}
  match ipv6 address prefix-list ipv6-{{ p.asn }}
+ match ipv6 next-hop {{ addr }}
  set comm-list 48ix-denied-communities delete
  set large-comm-list 48ix-denied-large-communities delete
  on-match goto 991
+{% endfor %}
 !
 route-map {{ p.asn }}-in deny 299
 !
