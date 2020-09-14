@@ -1,7 +1,6 @@
-! 48 IX Route Maps for Stellar (AS14525)
+! Stellar (AS14525) Route Maps
 !
 ! Outbound
-!
 route-map 14525-out deny 100
  match community 48ix-noexport-14525
 !
@@ -81,7 +80,6 @@ route-map 14525-out permit 999
  match community 48ix-all
 !
 ! Inbound
-!
 route-map 14525-in deny 100
  match as-path bogonans
 !
@@ -110,4 +108,5 @@ route-map 14525-in permit 991
  set community 62484:0 additive
  set large-community 62484:64810:1 62484:64820:1 62484:64830:1 62484:64840:1 62484:62484:14525 additive
  set local-preference 200
+!
 !
