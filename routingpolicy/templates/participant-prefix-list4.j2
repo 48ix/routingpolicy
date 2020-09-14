@@ -1,5 +1,4 @@
-! 48 IX IPv4 Prefix List for {{ p.name }} (AS{{ p.asn }})
-!
+! {{ p.name }} (AS{{ p.asn }}) IPv4 Prefix List
 {% for prefix in prefixes %}
 {% if prefix.prefixlen < max_len %}
 ip prefix-list ipv4-{{ p.asn }} permit {{ prefix }} le {{ max_len }}

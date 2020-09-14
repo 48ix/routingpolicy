@@ -1,5 +1,4 @@
-! 48 IX Global Community Lists
-!
+! Global Community Lists
 bgp community-list expanded 48ix-allowed-communities permit 0:.+
 bgp community-list expanded 48ix-allowed-communities permit 62484:.+
 bgp community-list expanded 48ix-denied-communities deny 0:.+

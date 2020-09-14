@@ -1,0 +1,14 @@
+! Global IPv6 Prefix Lists
+ipv6 prefix-list bogons6 seq 10 permit 2001:db8::/32 le 128
+ipv6 prefix-list bogons6 seq 15 permit 2002:a00::/24 le 128
+ipv6 prefix-list bogons6 seq 20 permit 2002:ac10::/28 le 128
+ipv6 prefix-list bogons6 seq 25 permit 2002:c0a8::/32 le 128
+ipv6 prefix-list bogons6 seq 30 permit 3ffe::/16 le 128
+ipv6 prefix-list bogons6 seq 35 permit fc00::/7 le 128
+ipv6 prefix-list bogons6 seq 40 permit fe00::/9 le 128
+ipv6 prefix-list bogons6 seq 45 permit fe80::/10 le 128
+ipv6 prefix-list bogons6 seq 5 permit ::/8 le 128
+ipv6 prefix-list bogons6 seq 50 permit fec0::/10 le 128
+ipv6 prefix-list bogons6 seq 55 permit ff00::/8 le 128
+ipv6 prefix-list dfz6 seq 5 permit ::/0 ge 32 le 48
+!

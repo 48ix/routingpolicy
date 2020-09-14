@@ -1,21 +1,18 @@
-! 48 IX BGP Communities for {{ p.name }} (AS{{ p.asn }})
+! {{ p.name }} (AS{{ p.asn }}) BGP Communities
 !
 ! Export Only
 ! When attached to a route, the route will only be propagated to the particpant p.asn specified and suppressed to all others.
-!
 bgp community-list standard 48ix-exportonly-{{ p.asn }} permit 62484:{{ p.asn }}
 bgp extcommunity-list expanded 48ix-exportonly-{{ p.asn }} permit ^[Rr][Tt]|[Ss][Oo][Oo]:62484:{{ p.asn }}$
 bgp large-community-list standard 48ix-exportonly-{{ p.asn }} permit 62484:1:{{ p.asn }}
 !
 ! No Export
-!
 bgp community-list standard 48ix-noexport-{{ p.asn }} permit 0:{{ p.asn }}
 bgp extcommunity-list standard 48ix-noexport-{{ p.asn }} permit rt 0:{{ p.asn }}
 bgp extcommunity-list standard 48ix-noexport-{{ p.asn }} permit soo 0:{{ p.asn }}
 bgp large-community-list standard 48ix-noexport-{{ p.asn }} permit 62484:0:{{ p.asn }}
 !
 ! Prepend
-!
 bgp community-list standard 48ix-prepend1-{{ p.asn }} permit 62484:64801
 bgp community-list standard 48ix-prepend2-{{ p.asn }} permit 62484:64802
 bgp community-list standard 48ix-prepend3-{{ p.asn }} permit 62484:64803

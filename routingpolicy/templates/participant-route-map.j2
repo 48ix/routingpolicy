@@ -1,7 +1,6 @@
-! 48 IX Route Maps for {{ p.name }} (AS{{ p.asn }})
+! {{ p.name }} (AS{{ p.asn }}) Route Maps
 !
 ! Outbound
-!
 route-map {{ p.asn }}-out deny 100
  match community 48ix-noexport-{{ p.asn }}
 !
@@ -81,7 +80,6 @@ route-map {{ p.asn }}-out permit 999
  match community 48ix-all
 !
 ! Inbound
-!
 route-map {{ p.asn }}-in deny 100
  match as-path bogonans
 !
@@ -110,4 +108,5 @@ route-map {{ p.asn }}-in permit 991
  set community 62484:0 additive
  set large-community 62484:64810:{{ rs }} 62484:64820:{{ loc }} 62484:64830:{{ metro }} 62484:64840:{{ p.id }} 62484:62484:{{ p.asn }} additive
  set local-preference 200
+!
 !
