@@ -1,7 +1,8 @@
 """48 IX Particpant Route Server Config Management."""
 
-from routingpolicy.generate import generate_all
+# Project
 from routingpolicy.combine import generate_combined
+from routingpolicy.generate import generate_all
 
 
 async def policy() -> None:

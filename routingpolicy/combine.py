@@ -7,9 +7,10 @@ configurations and all participant configurations.
 # Standard Library
 from typing import Generator
 
+# Project
 from routingpolicy.log import log
 from routingpolicy.config import params
-from routingpolicy.rendering import template_env, POLICIES_DIR, GLOBALS_DIR
+from routingpolicy.rendering import GLOBALS_DIR, POLICIES_DIR, template_env
 
 FILE_NAMES = (
     "communities.ios",

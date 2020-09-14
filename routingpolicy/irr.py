@@ -8,7 +8,7 @@ from ipaddress import ip_network
 # Project
 from routingpolicy.log import log
 from routingpolicy.rendering import Environment
-from routingpolicy.config.models.participant import Participant
+from routingpolicy.models.participant import Participant
 
 QUERY_ASN_IP4 = "\n!gas{}\n"
 QUERY_ASN_IP6 = "\n!6as{}\n"

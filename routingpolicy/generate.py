@@ -9,8 +9,8 @@ from routingpolicy.irr import render_prefixes
 from routingpolicy.log import log
 from routingpolicy.config import params
 from routingpolicy.peeringdb import max_prefixes
-from routingpolicy.config.models.participant import Participant
-from routingpolicy.rendering import template_env, POLICIES_DIR
+from routingpolicy.rendering import POLICIES_DIR, template_env
+from routingpolicy.models.participant import Participant
 
 
 def verify_complete(file: Path) -> bool:
@@ -40,7 +40,7 @@ async def communities(
     participant: Participant,
 ) -> None:
     """Generate Participant-specific BGP Community Lists."""
-    log.info("Generating Communities for AS{}: {}", participant.asn, participant.name)
+    log.info("Generating Communities for {}", participant.pretty)
     create_file_structure()
 
     participant_comms = template_env.get_template("participant-communities.j2")
@@ -48,11 +48,12 @@ async def communities(
     for rs in params.route_servers:
         result = await participant_comms.render_async(p=participant)
         output_file = POLICIES_DIR / rs.name / str(participant.asn) / "communities.ios"
-        log.debug(
-            "Communities for AS{}: {}\n{}", participant.asn, participant.name, result
-        )
+
+        log.debug("Communities for {}: {}\n{}", participant.pretty, result)
+
         with output_file.open("w+") as of:
             of.write(result)
+
         if verify_complete(output_file):
             log.success(
                 "Generated Communities for AS{}: {} at {}",
@@ -64,7 +65,7 @@ async def communities(
 
 async def route_map(participant: Participant) -> None:
     """Generate Participant-specific Route Maps."""
-    log.info("Generating Route Maps for AS{}: {}", participant.asn, participant.name)
+    log.info("Generating Route Maps for {}", participant.pretty)
     create_file_structure()
     participant_route_map = template_env.get_template("participant-route-map.j2")
     for rs in params.route_servers:
@@ -74,9 +75,7 @@ async def route_map(participant: Participant) -> None:
         )
         output_file = POLICIES_DIR / rs.name / str(participant.asn) / "route-map.ios"
 
-        log.debug(
-            "Route Maps for AS{}: {}\n{}", participant.asn, participant.name, result
-        )
+        log.debug("Route Maps for {}\n{}", participant.pretty, result)
 
         with output_file.open("w+") as of:
             of.write(result)
@@ -92,7 +91,7 @@ async def route_map(participant: Participant) -> None:
 
 async def prefixes(participant: Participant) -> None:
     """Generate Participant-specific Prefix Lists."""
-    log.info("Generating Prefix Lists for AS{}: {}", participant.asn, participant.name)
+    log.info("Generating Prefix Lists for {}", participant.pretty)
     create_file_structure()
     for rs in params.route_servers:
         async for family, render in render_prefixes(
@@ -110,10 +109,9 @@ async def prefixes(participant: Participant) -> None:
             rendered = await render
 
             log.debug(
-                "IPv{} Prefix List for AS{}: {}\n{}",
+                "IPv{} Prefix List for {}\n{}",
                 family,
-                participant.asn,
-                participant.name,
+                participant.pretty,
                 rendered,
             )
 
@@ -122,17 +120,16 @@ async def prefixes(participant: Participant) -> None:
 
             if verify_complete(output_file):
                 log.success(
-                    "Generated IPv{} Prefix Lists for AS{}: {} at {}",
+                    "Generated IPv{} Prefix Lists for {} at {}",
                     family,
-                    participant.asn,
-                    participant.name,
+                    participant.pretty,
                     str(output_file),
                 )
 
 
 async def bgp(participant: Participant) -> None:
     """Generate Participant-specific BGP Configs."""
-    log.info("Generating BGP Config for AS{}: {}", participant.asn, participant.name)
+    log.info("Generating BGP Config for {}", participant.pretty)
     create_file_structure()
     max4, max6 = await max_prefixes(participant.asn)
     for rs in params.route_servers:
@@ -140,9 +137,7 @@ async def bgp(participant: Participant) -> None:
         template = template_env.get_template("participant-bgp.j2")
         result = await template.render_async(p=participant, max4=max4, max6=max6)
 
-        log.debug(
-            "BGP Config for AS{}: {}\n{}", participant.asn, participant.name, result
-        )
+        log.debug("BGP Config for {}\n{}", participant.pretty, result)
 
         with output_file.open("w+") as of:
             of.write(result)

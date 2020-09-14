@@ -1,9 +1,12 @@
 """Get Participant Information via the PeeringDB API."""
 
+# Standard Library
 from typing import Tuple
 
+# Third Party
 from httpx import AsyncClient
 
+# Project
 from routingpolicy.log import log
 
 

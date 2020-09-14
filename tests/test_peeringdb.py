@@ -1,6 +1,8 @@
 """Test PeeringDB API Data Collection."""
+# Standard Library
 import asyncio
 
+# Project
 from routingpolicy.peeringdb import max_prefixes
 
 if __name__ == "__main__":
