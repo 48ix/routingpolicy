@@ -1,14 +1,26 @@
 """Configuration Parameters Validation Model."""
 
 # Standard Library
-from typing import List, Dict, Generator, Tuple
+import os
+from typing import Any, Dict, List, Tuple, Generator
 
 # Third Party
-from pydantic import BaseModel, StrictBool, root_validator, IPvAnyNetwork, IPvAnyAddress
+from pydantic import (
+    BaseModel,
+    SecretStr,
+    StrictStr,
+    StrictBool,
+    IPvAnyAddress,
+    IPvAnyNetwork,
+    root_validator,
+)
 
+# Project
+from routingpolicy.dotenv import load_env
 
-from routingpolicy.config.models.participant import Participant
-from routingpolicy.config.models.route_server import RouteServer
+# from routingpolicy.contentful import get_data
+from routingpolicy.models.participant import Participant
+from routingpolicy.models.route_server import RouteServer
 
 _RSNetG = Generator[IPvAnyNetwork, None, None]
 _RSNetT = Tuple[IPvAnyNetwork, ...]
@@ -30,6 +42,29 @@ def network_member(networks: _RSNetT, address: IPvAnyAddress) -> _NetMember:
         yield address in net
 
 
+class Contentful(BaseModel):
+    """Contentful API Parameters."""
+
+    space: StrictStr
+    access_token: SecretStr
+
+    @root_validator(pre=True)
+    def validate_contentful(cls, values: Any) -> Dict[str, str]:
+        """Load Contentful environment variables."""
+        if (
+            "CONTENTFUL_SPACE" not in os.environ
+            or "CONTENTFUL_ACCESS_TOKEN" not in os.environ
+        ):
+            load_env()
+        try:
+            return {
+                "space": os.environ["CONTENTFUL_SPACE"],
+                "access_token": os.environ["CONTENTFUL_ACCESS_TOKEN"],
+            }
+        except KeyError as key:
+            raise ValueError(f"{key} is missing from environment variables.")
+
+
 class MaxLen(BaseModel):
     """Maximum Prefix Length Parameters."""
 
@@ -42,13 +77,16 @@ class Params(BaseModel):
 
     debug: StrictBool = False
     max_length: MaxLen = MaxLen()
-    participants: List[Participant]
     route_servers: List[RouteServer]
+    contentful: Contentful = Contentful()
+    participants: List[Participant]
 
     @root_validator
     def validate_model(cls, values: Dict) -> Dict:
         """Ensure Participant addresses are contained within RS networks."""
+
         networks = tuple(get_networks(values["route_servers"]))
+
         for family in (4, 6):
             for participant in values["participants"]:
                 for addr in getattr(participant, f"ipv{family}"):

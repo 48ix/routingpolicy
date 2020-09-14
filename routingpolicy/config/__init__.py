@@ -1,1 +1,3 @@
-from .main import params
+"""Configuration Parameters."""
+
+from .main import params  # noqa: F401

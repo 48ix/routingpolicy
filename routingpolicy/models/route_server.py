@@ -1,6 +1,9 @@
 """Route Server Parameter Configuration Model."""
+# Standard Library
 from ipaddress import IPv4Network, IPv6Network
-from pydantic import BaseModel, StrictStr, StrictInt
+
+# Third Party
+from pydantic import BaseModel, StrictInt, StrictStr
 
 
 class RouteServer(BaseModel):
