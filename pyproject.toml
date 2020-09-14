@@ -6,7 +6,7 @@ authors = ["checktheroads <matt@48ix.net>"]
 license = "BSD-3-Clause"
 
 [tool.poetry.dependencies]
-python = "^3.6.9"
+python = "^3.7.3"
 jinja2 = "^2.11.2"
 pydantic = "^1.6.1"
 pyyaml = "^5.3.1"
