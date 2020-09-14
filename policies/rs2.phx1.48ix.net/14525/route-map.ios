@@ -108,7 +108,7 @@ route-map 14525-in deny 299
 route-map 14525-in permit 991
  set metric 0
  set community 62484:0 additive
- set large-community 62484:64810:1 62484:64820:1 62484:64830:1 62484:64840:1 62484:62484:14525 additive
+ set large-community 62484:64810:2 62484:64820:1 62484:64830:1 62484:64840:1 62484:62484:14525 additive
  set local-preference 200
 !
 !

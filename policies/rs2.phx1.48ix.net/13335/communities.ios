@@ -1,0 +1,37 @@
+! Cloudflare (AS13335) BGP Communities
+!
+! Export Only
+! When attached to a route, the route will only be propagated to the particpant p.asn specified and suppressed to all others.
+bgp community-list standard 48ix-exportonly-13335 permit 62484:13335
+bgp extcommunity-list expanded 48ix-exportonly-13335 permit ^[Rr][Tt]|[Ss][Oo][Oo]:62484:13335$
+bgp large-community-list standard 48ix-exportonly-13335 permit 62484:1:13335
+!
+! No Export
+bgp community-list standard 48ix-noexport-13335 permit 0:13335
+bgp extcommunity-list standard 48ix-noexport-13335 permit rt 0:13335
+bgp extcommunity-list standard 48ix-noexport-13335 permit soo 0:13335
+bgp large-community-list standard 48ix-noexport-13335 permit 62484:0:13335
+!
+! Prepend
+bgp community-list standard 48ix-prepend1-13335 permit 62484:64801
+bgp community-list standard 48ix-prepend2-13335 permit 62484:64802
+bgp community-list standard 48ix-prepend3-13335 permit 62484:64803
+bgp extcommunity-list standard 48ix-prepend1-13335 permit rt 62484:64801
+bgp extcommunity-list standard 48ix-prepend1-13335 permit soo 62484:64801
+bgp extcommunity-list standard 48ix-prepend1-13335 permit rt 64801:13335
+bgp extcommunity-list standard 48ix-prepend1-13335 permit soo 64801:13335
+bgp extcommunity-list standard 48ix-prepend2-13335 permit rt 62484:64802
+bgp extcommunity-list standard 48ix-prepend2-13335 permit soo 62484:64802
+bgp extcommunity-list standard 48ix-prepend2-13335 permit rt 64802:13335
+bgp extcommunity-list standard 48ix-prepend2-13335 permit soo 64802:13335
+bgp extcommunity-list standard 48ix-prepend3-13335 permit rt 62484:64803
+bgp extcommunity-list standard 48ix-prepend3-13335 permit soo 62484:64803
+bgp extcommunity-list standard 48ix-prepend3-13335 permit rt 64803:13335
+bgp extcommunity-list standard 48ix-prepend3-13335 permit soo 64803:13335
+bgp large-community-list standard 48ix-prepend1-13335 permit 62484:62484:64801
+bgp large-community-list standard 48ix-prepend1-13335 permit 62484:64801:13335
+bgp large-community-list standard 48ix-prepend2-13335 permit 62484:62484:64802
+bgp large-community-list standard 48ix-prepend2-13335 permit 62484:64802:13335
+bgp large-community-list standard 48ix-prepend3-13335 permit 62484:62484:64803
+bgp large-community-list standard 48ix-prepend3-13335 permit 62484:64803:13335
+!
