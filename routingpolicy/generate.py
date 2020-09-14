@@ -4,21 +4,12 @@
 import asyncio
 from pathlib import Path
 
-# Third Party
-from jinja2 import Environment, PackageLoader
-
 # Project
 from routingpolicy.irr import render_prefixes
 from routingpolicy.log import log
 from routingpolicy.config import params
 from routingpolicy.config.models.participant import Participant
-
-template_env = Environment(
-    loader=PackageLoader("routingpolicy", "templates"),
-    enable_async=True,
-    trim_blocks=True,
-)
-TARGET_DIR = Path(__file__).parent.parent / "policies"
+from routingpolicy.rendering import template_env, POLICIES_DIR
 
 
 def verify_complete(file: Path) -> bool:
@@ -32,7 +23,7 @@ def verify_complete(file: Path) -> bool:
 def create_file_structure() -> bool:
     """Gracefully create output policy file structure."""
     for rs in params.route_servers:
-        rs_dir = TARGET_DIR / rs.name
+        rs_dir = POLICIES_DIR / rs.name
         if not rs_dir.exists():
             log.debug("Creating {}", str(rs_dir))
             rs_dir.mkdir()
@@ -55,7 +46,7 @@ async def communities(
 
     for rs in params.route_servers:
         result = await participant_comms.render_async(p=participant)
-        output_file = TARGET_DIR / rs.name / str(participant.asn) / "communities.ios"
+        output_file = POLICIES_DIR / rs.name / str(participant.asn) / "communities.ios"
         log.debug(
             "Communities for AS{}: {}\n{}", participant.asn, participant.name, result
         )
@@ -80,7 +71,7 @@ async def route_map(participant: Participant) -> None:
         result = await participant_route_map.render_async(
             p=participant, rs=rs.id, loc=rs.loc_id, metro=rs.metro_id
         )
-        output_file = TARGET_DIR / rs.name / str(participant.asn) / "route-map.ios"
+        output_file = POLICIES_DIR / rs.name / str(participant.asn) / "route-map.ios"
 
         log.debug(
             "Route Maps for AS{}: {}\n{}", participant.asn, participant.name, result
@@ -110,7 +101,7 @@ async def prefixes(participant: Participant) -> None:
             template_env=template_env,
         ):
             output_file = (
-                TARGET_DIR
+                POLICIES_DIR
                 / rs.name
                 / str(participant.asn)
                 / f"prefix-list-ipv{family}.ios"

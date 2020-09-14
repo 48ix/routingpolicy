@@ -5,11 +5,9 @@ import asyncio
 from typing import Tuple, Awaitable, AsyncGenerator
 from ipaddress import ip_network
 
-# Third Party
-from jinja2 import Environment
-
 # Project
 from routingpolicy.log import log
+from routingpolicy.rendering import Environment
 from routingpolicy.config.models.participant import Participant
 
 QUERY_ASN_IP4 = "\n!gas{}\n"
