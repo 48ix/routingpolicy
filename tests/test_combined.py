@@ -1,6 +1,7 @@
 """Test Combined Configuration Generation."""
 
+import asyncio
 from routingpolicy.combine import generate_combined
 
 if __name__ == "__main__":
-    generate_combined()
+    asyncio.run(generate_combined())

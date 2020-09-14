@@ -1,0 +1,33 @@
+! {{ p.name }} (AS{{ p.asn }}) BGP Peer Configuration
+router bgp 62484
+{% for addr in p.ipv4 %}
+ neighbor {{ addr }} peer-group participants4
+ neighbor {{ addr }} description AS{{ p.asn }} - {{ p.name }} IPv4 {{ loop.index }}
+{% endfor %}
+{% for addr in p.ipv6 %}
+ neighbor {{ addr }} peer-group participants6
+ neighbor {{ addr }} description AS{{ p.asn }} - {{ p.name }} IPv6 {{ loop.index }}
+{% endfor %}
+ !
+ address-family ipv4 unicast
+{% for addr in p.ipv4 %}
+{% if max4 != 0 %}
+  neighbor {{ addr }} maximum-prefix {{ max4 }}
+{% endif %}
+  neighbor {{ addr }} route-map {{ p.asn }}-in in
+  neighbor {{ addr }} route-map {{ p.asn }}-out out
+  neighbor {{ addr }} activate
+{% endfor %}
+ exit-address-family
+ !
+ address-family ipv6 unicast
+{% for addr in p.ipv6 %}
+{% if max6 != 0 %}
+  neighbor {{ addr }} maximum-prefix {{ max6 }}
+{% endif %}
+  neighbor {{ addr }} route-map {{ p.asn }}-in in
+  neighbor {{ addr }} route-map {{ p.asn }}-out out
+  neighbor {{ addr }} activate
+{% endfor %}
+ exit-address-family
+!

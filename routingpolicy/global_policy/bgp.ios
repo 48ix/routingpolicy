@@ -1,0 +1,32 @@
+! Global BGP Config
+router bgp 62484
+ no bgp default ipv4-unicast
+ bgp graceful-restart
+ bgp log-neighbor-changes
+ neighbor participants4 peer-group
+ neighbor participants6 peer-group
+ !
+ address-family ipv4 unicast
+  no neighbor participants4 send-community extended
+  neighbor participants4 soft-reconfiguration inbound
+  neighbor participants4 maximum-prefix 200
+  neighbor participants4 route-server-client
+  neighbor participants4 route-map deny-all in
+  neighbor participants4 route-map deny-all out
+  neighbor participants4 remove-private-AS all
+  neighbor participants4 prefix-list participant4-in in
+  neighbor participants4 prefix-list participant4-out out
+ exit-address-family
+ !
+ address-family ipv6 unicast
+  no neighbor participants6 send-community extended
+  neighbor participants6 soft-reconfiguration inbound
+  neighbor participants4 maximum-prefix 50
+  neighbor participants6 route-server-client
+  neighbor participants6 route-map deny-all in
+  neighbor participants6 route-map deny-all out
+  neighbor participants6 remove-private-AS all
+  neighbor participants6 prefix-list participant6-in in
+  neighbor participants6 prefix-list participant6-out out
+ exit-address-family
+!

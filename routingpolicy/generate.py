@@ -8,6 +8,7 @@ from pathlib import Path
 from routingpolicy.irr import render_prefixes
 from routingpolicy.log import log
 from routingpolicy.config import params
+from routingpolicy.peeringdb import max_prefixes
 from routingpolicy.config.models.participant import Participant
 from routingpolicy.rendering import template_env, POLICIES_DIR
 
@@ -129,8 +130,34 @@ async def prefixes(participant: Participant) -> None:
                 )
 
 
+async def bgp(participant: Participant) -> None:
+    """Generate Participant-specific BGP Configs."""
+    log.info("Generating BGP Config for AS{}: {}", participant.asn, participant.name)
+    create_file_structure()
+    max4, max6 = await max_prefixes(participant.asn)
+    for rs in params.route_servers:
+        output_file = POLICIES_DIR / rs.name / str(participant.asn) / "bgp.ios"
+        template = template_env.get_template("participant-bgp.j2")
+        result = await template.render_async(p=participant, max4=max4, max6=max6)
+
+        log.debug(
+            "BGP Config for AS{}: {}\n{}", participant.asn, participant.name, result
+        )
+
+        with output_file.open("w+") as of:
+            of.write(result)
+
+        if verify_complete(output_file):
+            log.success(
+                "Generated BGP Config for AS{}: {} at {}",
+                participant.asn,
+                participant.name,
+                str(output_file),
+            )
+
+
 async def generate_all() -> None:
     """Generate all templates for all route route servers and participants."""
-    coros = (communities, route_map, prefixes)
+    coros = (communities, route_map, prefixes, bgp)
     tasks = (c(p) for c in coros for p in params.participants)
     await asyncio.gather(*tasks)
