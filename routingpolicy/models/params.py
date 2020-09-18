@@ -17,8 +17,8 @@ from pydantic import (
 
 # Project
 from routingpolicy.dotenv import load_env
+from routingpolicy.models.api import Api
 from routingpolicy.models.agent import Agent
-
 # from routingpolicy.contentful import get_data
 from routingpolicy.models.participant import Participant
 from routingpolicy.models.route_server import RouteServer
@@ -82,6 +82,8 @@ class Params(BaseModel):
     contentful: Contentful = Contentful()
     participants: List[Participant]
     agent: Agent
+    api: Api = Api()
+    interval: int = 1440
 
     @root_validator
     def validate_model(cls, values: Dict) -> Dict:
