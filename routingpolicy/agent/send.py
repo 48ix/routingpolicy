@@ -1,6 +1,7 @@
 """Create & Send Encrypted Policy Payload to a 48 IX Route Server."""
 
 # Standard Library
+import time
 import hashlib
 from socket import gaierror
 from typing import Tuple
@@ -29,8 +30,13 @@ def create_payload(policy: str) -> Tuple[bytes, str, str]:
     return encrypted, predigest, postdigest
 
 
-async def send_policy(route_server: RouteServer) -> None:
+async def send_policy(route_server: RouteServer, wait: int) -> None:
     """Read a generated policy & send it to a route server."""
+
+    # Optionally block pause of execution.
+    if wait:
+        log.info("Waiting {} seconds before proceeding with update", wait)
+        time.sleep(wait)
 
     try:
         connection: Connection = rpyc.connect(
