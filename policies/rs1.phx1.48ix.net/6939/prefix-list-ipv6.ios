@@ -15,7 +15,6 @@ ipv6 prefix-list ipv6-6939 permit 2a0d:b040::/30 le 48
 ipv6 prefix-list ipv6-6939 permit 2a06:5280::/29 le 48
 ipv6 prefix-list ipv6-6939 permit 2604:6700::/32 le 48
 ipv6 prefix-list ipv6-6939 permit 2a0d:e2c0::/30 le 48
-ipv6 prefix-list ipv6-6939 permit 2600:9400::/24 le 48
 ipv6 prefix-list ipv6-6939 permit 2605:3cc0::/32 le 48
 ipv6 prefix-list ipv6-6939 permit 2a09:9f43::/32 le 48
 ipv6 prefix-list ipv6-6939 permit 2602:feca::/36 le 48
