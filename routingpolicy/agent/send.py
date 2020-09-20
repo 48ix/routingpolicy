@@ -30,9 +30,9 @@ def create_payload(policy: str) -> Tuple[bytes, str, str]:
     return encrypted, predigest, postdigest
 
 
-async def send_policy(route_server: RouteServer, wait: int) -> None:
+async def send_policy(route_server: RouteServer, wait: int) -> str:
     """Read a generated policy & send it to a route server."""
-
+    result = ""
     # Optionally block pause of execution.
     if wait:
         log.info("Waiting {} seconds before proceeding with update", wait)
@@ -43,15 +43,19 @@ async def send_policy(route_server: RouteServer, wait: int) -> None:
             route_server.name, params.agent.port, ipv6=True
         )
     except ConnectionRefusedError:
-        raise ConnectionError(
-            "Connection refused to {}:{}".format(route_server.name, params.agent.port)
+        result = "Connection refused to {}:{}".format(
+            route_server.name, params.agent.port
         )
     except gaierror:
-        raise ConnectionError(
-            "Route Server {}:{} is unreachable".format(
-                route_server.name, params.agent.port
-            )
+        result = "Route Server {}:{} is unreachable".format(
+            route_server.name, params.agent.port
         )
+
+    # If an error has occurred, stop here & return a valuable error
+    # message.
+    if result:
+        log.critical(result)
+        return result
 
     config_file = (
         Path(__file__).parent.parent.parent
@@ -78,7 +82,9 @@ async def send_policy(route_server: RouteServer, wait: int) -> None:
         # Send the encrypted payload.
         response = connection.root.push_policy(payload)
         log.success(response)
+        result = "Deployed Policy to Route Server {}".format(route_server.name)
         break
 
     # Gracefully close the connection.
     connection.close()
+    return result
