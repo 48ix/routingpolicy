@@ -54,6 +54,9 @@ async def communities(
         result = await participant_comms.render_async(p=participant)
         output_file = POLICIES_DIR / rs.name / str(participant.asn) / "communities.ios"
 
+        if not output_file.exists():
+            output_file.touch()
+
         log.debug("Communities for {}\n{}", participant.pretty, result)
 
         with output_file.open("w+") as of:
@@ -61,9 +64,8 @@ async def communities(
 
         if verify_complete(output_file):
             log.success(
-                "Generated Communities for AS{}: {} at {}",
-                participant.asn,
-                participant.name,
+                "Generated Communities for {} at {}",
+                participant.pretty,
                 str(output_file),
             )
 
@@ -80,6 +82,9 @@ async def route_map(participant: Participant) -> None:
         )
         output_file = POLICIES_DIR / rs.name / str(participant.asn) / "route-map.ios"
 
+        if not output_file.exists():
+            output_file.touch()
+
         log.debug("Route Maps for {}\n{}", participant.pretty, result)
 
         with output_file.open("w+") as of:
@@ -87,9 +92,8 @@ async def route_map(participant: Participant) -> None:
 
         if verify_complete(output_file):
             log.success(
-                "Generated Route Maps for AS{}: {} at {}",
-                participant.asn,
-                participant.name,
+                "Generated Route Maps for {} at {}",
+                participant.pretty,
                 str(output_file),
             )
 
@@ -111,6 +115,10 @@ async def prefixes(participant: Participant) -> None:
                 / str(participant.asn)
                 / f"prefix-list-ipv{family}.ios"
             )
+
+            if not output_file.exists():
+                output_file.touch()
+
             rendered = await render
 
             log.debug(
@@ -139,6 +147,10 @@ async def bgp(participant: Participant) -> None:
     max4, max6 = await max_prefixes(participant.asn)
     for rs in params.route_servers:
         output_file = POLICIES_DIR / rs.name / str(participant.asn) / "bgp.ios"
+
+        if not output_file.exists():
+            output_file.touch()
+
         template = template_env.get_template("participant-bgp.j2")
         result = await template.render_async(p=participant, max4=max4, max6=max6)
 
@@ -149,9 +161,8 @@ async def bgp(participant: Participant) -> None:
 
         if verify_complete(output_file):
             log.success(
-                "Generated BGP Config for AS{}: {} at {}",
-                participant.asn,
-                participant.name,
+                "Generated BGP Config for {} at {}",
+                participant.pretty,
                 str(output_file),
             )
 

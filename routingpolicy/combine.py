@@ -43,16 +43,25 @@ async def generate_combined() -> None:
 
     for rs in params.route_servers:
         log.info("Generating combined config file for {}", rs.name)
+
         items = ["" for _ in FILE_NAMES]
         rs_path = POLICIES_DIR / rs.name
         output_file = rs_path / "_all.ios"
+
         for participant in params.participants:
             participant_path = rs_path / str(participant.asn)
+
             for i, file_name in enumerate(FILE_NAMES):
                 file = participant_path / file_name
-                with file.open("r") as f:
-                    items[i] += "\n" + f.read()
+                try:
+                    with file.open("r") as f:
+                        items[i] += "\n" + f.read()
+                except FileNotFoundError:
+                    items[i] += "\n" + "! Not Found"
+                    log.critical("{} does not exist.", str(file))
+
         communities, prefixes4, prefixes6, route_maps, bgp = items
+
         output = await combined_template.render_async(
             rs=rs,
             communities="\n".join((g_communities, communities)),
@@ -61,5 +70,6 @@ async def generate_combined() -> None:
             prefixes4="\n".join((g_prefixes4, prefixes4)),
             prefixes6="\n".join((g_prefixes6, prefixes6)),
         )
-        with output_file.open("w") as of:
+
+        with output_file.open("w+") as of:
             of.write(output)
