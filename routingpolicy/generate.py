@@ -23,6 +23,9 @@ def verify_complete(file: Path) -> bool:
 
 def create_file_structure() -> bool:
     """Gracefully create output policy file structure."""
+    if not POLICIES_DIR.exists():
+        log.debug("Creating {}", str(POLICIES_DIR))
+        POLICIES_DIR.mkdir()
     for rs in params.route_servers:
         rs_dir = POLICIES_DIR / rs.name
         if not rs_dir.exists():

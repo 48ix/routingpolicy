@@ -9,12 +9,15 @@ from apscheduler.triggers.interval import IntervalTrigger
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 # Project
+from routingpolicy import APP_DIR
 from routingpolicy.log import log
 from routingpolicy.run import policy
 from routingpolicy.config import params
 from routingpolicy.api.main import start_api
 
 if __name__ == "__main__":
+    if not APP_DIR.exists():
+        APP_DIR.mkdir()
     loop = asyncio.new_event_loop()
     scheduler = AsyncIOScheduler(logger=log, timezone="Etc/UTC", event_loop=loop)
     scheduler.add_job(start_api, id="api")

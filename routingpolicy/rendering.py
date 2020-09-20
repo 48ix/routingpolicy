@@ -12,5 +12,5 @@ template_env = Environment(
     trim_blocks=True,
 )
 
-POLICIES_DIR = Path(__file__).parent.parent / "policies"
+POLICIES_DIR = Path("/etc/48ix-routing-policy/policies")
 GLOBALS_DIR = Path(__file__).parent / "global_policy"
