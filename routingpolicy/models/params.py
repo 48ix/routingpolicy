@@ -3,9 +3,12 @@
 # Standard Library
 import os
 from typing import Any, Dict, List, Tuple, Generator
+from pathlib import Path
 
 # Third Party
 from pydantic import (
+    ByteSize,
+    FilePath,
     BaseModel,
     SecretStr,
     StrictStr,
@@ -19,8 +22,6 @@ from pydantic import (
 from routingpolicy.dotenv import load_env
 from routingpolicy.models.api import Api
 from routingpolicy.models.agent import Agent
-
-# from routingpolicy.contentful import get_data
 from routingpolicy.models.participant import Participant
 from routingpolicy.models.route_server import RouteServer
 
@@ -85,6 +86,8 @@ class Params(BaseModel):
     agent: Agent
     api: Api = Api()
     interval: int = 1440
+    logfile: FilePath = Path.home() / "48ix-routingpolicy.log"
+    logsize: ByteSize = ByteSize(100000000)  # 100 MB
 
     @root_validator
     def validate_model(cls, values: Dict) -> Dict:

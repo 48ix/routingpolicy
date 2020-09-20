@@ -8,7 +8,7 @@ from pathlib import Path
 import yaml
 
 # Project
-from routingpolicy.log import log, set_log_level
+from routingpolicy.log import log, setup_logging
 from routingpolicy.dotenv import load_env
 from routingpolicy.contentful import get_data
 from routingpolicy.models.params import Params
@@ -34,4 +34,9 @@ load_env()
 
 params = get_config()
 
-set_log_level(log, params.debug)
+setup_logging(
+    log,
+    debug=params.debug,
+    logfile=params.logfile,
+    logsize=params.logsize.human_readable(),
+)

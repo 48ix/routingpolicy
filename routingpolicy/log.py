@@ -3,6 +3,7 @@
 # Standard Library
 import os
 import sys
+from pathlib import Path
 
 # Third Party
 from loguru import logger as _loguru_logger
@@ -34,13 +35,20 @@ def base_logger() -> LoguruLogger:
 log = base_logger()
 
 
-def set_log_level(logger: LoguruLogger, debug: bool) -> bool:
+def setup_logging(
+    logger: LoguruLogger, debug: bool, logfile: Path, logsize: str
+) -> bool:
     """Set log level based on debug state."""
+    level = "INFO"
+
     if debug:
-        os.environ["48IX_ROUTING_POLICY"] = "DEBUG"
-        logger.remove()
-        logger.add(sys.stdout, format=_LOG_FMT, level="DEBUG", enqueue=True)
-        logger.configure(levels=_LOG_LEVELS)
+        level = "DEBUG"
+    os.environ["48IX_ROUTING_POLICY_LOG_LEVEL"] = level
+
+    logger.remove()
+    logger.add(sys.stdout, format=_LOG_FMT, level=level, enqueue=True)
+    logger.add(logfile, rotation=logsize, enqueue=True)
+    logger.configure(levels=_LOG_LEVELS)
 
     if debug:
         logger.debug("Debugging enabled")
