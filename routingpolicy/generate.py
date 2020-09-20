@@ -18,6 +18,8 @@ def verify_complete(file: Path) -> bool:
     complete = False
     if file.exists() and file.stat().st_size != 0:
         complete = True
+    if not complete:
+        log.error("{} does not exist or is empty.", str(file))
     return complete
 
 
@@ -52,7 +54,7 @@ async def communities(
         result = await participant_comms.render_async(p=participant)
         output_file = POLICIES_DIR / rs.name / str(participant.asn) / "communities.ios"
 
-        log.debug("Communities for {}: {}\n{}", participant.pretty, result)
+        log.debug("Communities for {}\n{}", participant.pretty, result)
 
         with output_file.open("w+") as of:
             of.write(result)
