@@ -1,8 +1,7 @@
 """Configuration Parameters Validation Model."""
 
 # Standard Library
-import os
-from typing import Any, Dict, List, Tuple, Generator
+from typing import Dict, List, Tuple, Generator
 from pathlib import Path
 
 # Third Party
@@ -19,7 +18,6 @@ from pydantic import (
 )
 
 # Project
-from routingpolicy.dotenv import load_env
 from routingpolicy.models.api import Api
 from routingpolicy.models.agent import Agent
 from routingpolicy.models.participant import Participant
@@ -50,22 +48,6 @@ class Contentful(BaseModel):
 
     space: StrictStr
     access_token: SecretStr
-
-    @root_validator(pre=True)
-    def validate_contentful(cls, values: Any) -> Dict[str, str]:
-        """Load Contentful environment variables."""
-        if (
-            "CONTENTFUL_SPACE" not in os.environ
-            or "CONTENTFUL_ACCESS_TOKEN" not in os.environ
-        ):
-            load_env()
-        try:
-            return {
-                "space": os.environ["CONTENTFUL_SPACE"],
-                "access_token": os.environ["CONTENTFUL_ACCESS_TOKEN"],
-            }
-        except KeyError as key:
-            raise ValueError(f"{key} is missing from environment variables.")
 
 
 class MaxLen(BaseModel):
