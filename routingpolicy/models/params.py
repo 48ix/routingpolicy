@@ -63,7 +63,7 @@ class Params(BaseModel):
     debug: StrictBool = False
     max_length: MaxLen = MaxLen()
     route_servers: List[RouteServer]
-    contentful: Contentful = Contentful()
+    contentful: Contentful
     participants: List[Participant]
     agent: Agent
     api: Api = Api()
