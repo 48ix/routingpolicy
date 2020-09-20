@@ -1,13 +1,12 @@
 """Get Participant Information via Contentful API."""
+
 # Standard Library
-import os
 from typing import Dict, List, Tuple, AsyncGenerator
 
 # Third Party
 from httpx import AsyncClient
 
 # Project
-from routingpolicy.dotenv import load_env
 from routingpolicy.models.participant import Participant
 from routingpolicy.models.route_server import RouteServer
 
@@ -28,18 +27,19 @@ async def get_route_servers(data: Dict) -> AsyncGenerator[RouteServer, None]:
         yield RouteServer(**entry["fields"])
 
 
-async def get_data() -> Tuple[List[Participant], List[RouteServer]]:
+async def get_data(
+    space: str, access_token: str
+) -> Tuple[List[Participant], List[RouteServer]]:
     """Get Configuration Data from Contentful."""
-    load_env()
 
     async with AsyncClient(
         http2=True,
         verify=True,
         base_url="https://cdn.contentful.com",
         headers={"accept": "application/json"},
-        params={"access_token": os.environ["CONTENTFUL_ACCESS_TOKEN"]},
+        params={"access_token": access_token},
     ) as client:
-        uri = f'/spaces/{os.environ["CONTENTFUL_SPACE"]}/entries'
+        uri = f"/spaces/{space}/entries"
 
         res_participants = await client.get(
             uri,
