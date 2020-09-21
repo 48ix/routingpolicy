@@ -76,8 +76,8 @@ async def send_policy(route_server: RouteServer, wait: int) -> str:
 
         # Send the encrypted payload.
         response = connection.root.push_policy(payload)
-        log.success(response)
-        result = "Deployed Policy to Route Server {}".format(route_server.name)
+        result = "{}: {}".format(route_server.name, response)
+        log.success(result)
         break
 
     # Gracefully close the connection.
