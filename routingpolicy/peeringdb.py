@@ -12,7 +12,7 @@ from routingpolicy.log import log
 
 async def max_prefixes(asn: int) -> Tuple[int, int]:
     """Search PeeringDB for an entry matching an ASN and return its max prefixes."""
-    prefixes = (0, 0)
+    prefixes = (200, 20)
     async with AsyncClient(
         http2=True,
         verify=True,
@@ -32,7 +32,7 @@ async def max_prefixes(asn: int) -> Tuple[int, int]:
                     data["updated"],
                 )
                 prefixes = (
-                    data.get("info_prefixes4", 0),
-                    data.get("info_prefixes6", 0),
+                    data.get("info_prefixes4", 200),
+                    data.get("info_prefixes6", 20),
                 )
     return prefixes
