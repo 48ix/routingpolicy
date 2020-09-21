@@ -5,7 +5,6 @@ import time
 import hashlib
 from socket import gaierror
 from typing import Tuple
-from pathlib import Path
 
 # Third Party
 import rpyc
@@ -13,6 +12,7 @@ from rpyc.core import Connection
 from cryptography.fernet import Fernet
 
 # Project
+from routingpolicy.generate import POLICIES_DIR
 from routingpolicy.log import log
 from routingpolicy.config import params
 from routingpolicy.models.route_server import RouteServer
@@ -57,12 +57,7 @@ async def send_policy(route_server: RouteServer, wait: int) -> str:
         log.critical(result)
         return result
 
-    config_file = (
-        Path(__file__).parent.parent.parent
-        / "policies"
-        / route_server.name
-        / "_all.ios"
-    )
+    config_file = POLICIES_DIR / route_server.name / "_all.ios"
 
     # Read the combined configuration file & generate a SHA256 digest of
     # its content. Then, encrypt the content, and generate another
