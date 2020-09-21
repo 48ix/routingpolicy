@@ -6,6 +6,7 @@ from pathlib import Path
 
 # Third Party
 from pydantic import (
+    HttpUrl,
     ByteSize,
     FilePath,
     BaseModel,
@@ -57,6 +58,12 @@ class MaxLen(BaseModel):
     ipv6: int = 48
 
 
+class Slack(BaseModel):
+    """Slack Webhook Parameters."""
+
+    webhook: HttpUrl
+
+
 class Params(BaseModel):
     """Configuration Parameters."""
 
@@ -70,6 +77,7 @@ class Params(BaseModel):
     interval: int = 1440
     logfile: FilePath = Path.home() / "48ix-routingpolicy.log"
     logsize: ByteSize = ByteSize(100000000)  # 100 MB
+    slack: Slack
 
     @root_validator
     def validate_model(cls, values: Dict) -> Dict:

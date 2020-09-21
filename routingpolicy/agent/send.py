@@ -12,9 +12,10 @@ from rpyc.core import Connection
 from cryptography.fernet import Fernet
 
 # Project
-from routingpolicy.generate import POLICIES_DIR
 from routingpolicy.log import log
+from routingpolicy.slack import send_webhook
 from routingpolicy.config import params
+from routingpolicy.generate import POLICIES_DIR
 from routingpolicy.models.route_server import RouteServer
 
 
@@ -55,6 +56,7 @@ async def send_policy(route_server: RouteServer, wait: int) -> str:
     # message.
     if result:
         log.critical(result)
+        await send_webhook(route_server, result)
         return result
 
     config_file = POLICIES_DIR / route_server.name / "_all.ios"
@@ -82,4 +84,5 @@ async def send_policy(route_server: RouteServer, wait: int) -> str:
 
     # Gracefully close the connection.
     connection.close()
+    await send_webhook(route_server, result)
     return result
