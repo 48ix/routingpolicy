@@ -25,6 +25,22 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 # Standard Library
+import logging
+from logging import FileHandler, StreamHandler
 from pathlib import Path
 
 APP_DIR = Path("/etc/48ix-routingpolicy")
+
+logger = logging.getLogger("routingpolicy")
+logger.setLevel(logging.INFO)
+log_file = Path.home() / "48ix-routingpolicy.log"
+log_format = logging.Formatter(
+    "[%(levelname)s] %(asctime)s | %(module)s.%(funcName)s:%(lineno)s → %(message)s",
+    datefmt="%Y%m%d %H:%M:%S",
+)
+file_handler = FileHandler(log_file)
+term_handler = StreamHandler()
+file_handler.setFormatter(log_format)
+term_handler.setFormatter(log_format)
+logger.addHandler(term_handler)
+logger.addHandler(file_handler)

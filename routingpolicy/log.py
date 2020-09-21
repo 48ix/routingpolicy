@@ -47,7 +47,7 @@ def setup_logging(
 
     logger.remove()
     logger.add(sys.stdout, format=_LOG_FMT, level=level, enqueue=True)
-    logger.add(logfile, rotation=logsize, enqueue=True)
+    logger.add(logfile, rotation=logsize, level=level, enqueue=True)
     logger.configure(levels=_LOG_LEVELS)
 
     if debug:
