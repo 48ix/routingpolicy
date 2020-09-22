@@ -1,12 +1,12 @@
-! {{ p.name }} (AS{{ p.asn }}) IPv4 Prefix Lists
+! {{ p.name }} (AS{{ p.asn }}) IPv4 Prefix Lists - {{ now }}
 {% for addr in p.ipv4 %}
-ip prefix-list ipv4-{{ p.asn }}-nexthop permit {{ addr }}/32
+ip prefix-list ipv4-{{ p.asn }}-nexthop seq {{ loop.index }} permit {{ addr }}/32
 {% endfor %}
 {% for prefix in prefixes %}
 {% if prefix.prefixlen < max_len %}
-ip prefix-list ipv4-{{ p.asn }} permit {{ prefix }} le {{ max_len }}
+ip prefix-list ipv4-{{ p.asn }} seq {{ loop.index }} permit {{ prefix }} le {{ max_len }}
 {% else %}
-ip prefix-list ipv4-{{ p.asn }} permit {{ prefix }}
+ip prefix-list ipv4-{{ p.asn }} seq {{ loop.index }} permit {{ prefix }}
 {% endif %}
 {% endfor %}
 !
