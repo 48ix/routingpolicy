@@ -6,6 +6,7 @@ configurations and all participant configurations.
 
 # Standard Library
 from typing import Generator
+from datetime import datetime
 
 # Project
 from routingpolicy.log import log
@@ -69,6 +70,7 @@ async def generate_combined() -> None:
             bgp="\n".join((g_bgp, bgp)),
             prefixes4="\n".join((g_prefixes4, prefixes4)),
             prefixes6="\n".join((g_prefixes6, prefixes6)),
+            now=datetime.utcnow().isoformat(),
         )
 
         with output_file.open("w+") as of:

@@ -4,6 +4,7 @@
 import asyncio
 from typing import Tuple, Awaitable, AsyncGenerator
 from ipaddress import ip_network
+from datetime import datetime
 
 # Project
 from routingpolicy.log import log
@@ -59,5 +60,8 @@ async def render_prefixes(
         max_len = {4: max_ipv4, 6: max_ipv6}[family]
         prefix_list = template_env.get_template(f"participant-prefix-list{family}.j2")
         yield family, prefix_list.render_async(
-            p=participant, prefixes=prefixes, max_len=max_len
+            p=participant,
+            prefixes=prefixes,
+            max_len=max_len,
+            now=datetime.utcnow().isoformat(),
         )

@@ -3,6 +3,7 @@
 # Standard Library
 import asyncio
 from pathlib import Path
+from datetime import datetime
 
 # Project
 from routingpolicy.irr import render_prefixes
@@ -51,7 +52,9 @@ async def communities(
     participant_comms = template_env.get_template("participant-communities.j2")
 
     for rs in params.route_servers:
-        result = await participant_comms.render_async(p=participant)
+        result = await participant_comms.render_async(
+            p=participant, now=datetime.utcnow().isoformat()
+        )
         output_file = POLICIES_DIR / rs.name / str(participant.asn) / "communities.ios"
 
         if not output_file.exists():
@@ -78,7 +81,11 @@ async def route_map(participant: Participant) -> None:
     for rs in params.route_servers:
 
         result = await participant_route_map.render_async(
-            p=participant, rs=rs.id, loc=rs.loc_id, metro=rs.metro_id
+            p=participant,
+            rs=rs.id,
+            loc=rs.loc_id,
+            metro=rs.metro_id,
+            now=datetime.utcnow().isoformat(),
         )
         output_file = POLICIES_DIR / rs.name / str(participant.asn) / "route-map.ios"
 
@@ -152,7 +159,9 @@ async def bgp(participant: Participant) -> None:
             output_file.touch()
 
         template = template_env.get_template("participant-bgp.j2")
-        result = await template.render_async(p=participant, max4=max4, max6=max6)
+        result = await template.render_async(
+            p=participant, max4=max4, max6=max6, now=datetime.utcnow().isoformat()
+        )
 
         log.debug("BGP Config for {}\n{}", participant.pretty, result)
 

@@ -1,4 +1,4 @@
-! {{ p.name }} (AS{{ p.asn }}) BGP Peer Configuration
+! {{ p.name }} (AS{{ p.asn }}) BGP Peer Configuration - {{ now }}
 router bgp 62484
 {% for addr in p.ipv4 %}
  neighbor {{ addr }} peer-group participants4
