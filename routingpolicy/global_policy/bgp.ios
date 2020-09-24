@@ -5,6 +5,8 @@ router bgp 62484
  bgp log-neighbor-changes
  neighbor participants4 peer-group
  neighbor participants6 peer-group
+ neighbor participants4 remote-as external
+ neighbor participants6 remote-as external
  !
  address-family ipv4 unicast
   no neighbor participants4 send-community extended
