@@ -81,12 +81,15 @@ route-map {{ p.asn }}-out permit 999
 !
 ! Inbound
 route-map {{ p.asn }}-in deny 100
- match as-path bogonans
+ match rpki invalid
 !
 route-map {{ p.asn }}-in deny 105
- match ip address prefix-list bogons4
+ match as-path bogonans
 !
 route-map {{ p.asn }}-in deny 110
+ match ip address prefix-list bogons4
+!
+route-map {{ p.asn }}-in deny 115
  match ipv6 address prefix-list bogons6
 !
 route-map {{ p.asn }}-in permit 200
