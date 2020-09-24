@@ -30,6 +30,7 @@ def global_policies() -> Generator[str, None, None]:
         "prefix-list-ipv4.ios",
         "prefix-list-ipv6.ios",
         "bgp.ios",
+        "route-maps.ios",
     )
     for file_name in global_file_names:
         file_path = GLOBALS_DIR / file_name
@@ -40,7 +41,14 @@ def global_policies() -> Generator[str, None, None]:
 async def generate_combined() -> None:
     """Combine generated per-participant configs into a single file per route server."""
     combined_template = template_env.get_template("combined.j2")
-    g_aspaths, g_communities, g_prefixes4, g_prefixes6, g_bgp = global_policies()
+    (
+        g_aspaths,
+        g_communities,
+        g_prefixes4,
+        g_prefixes6,
+        g_bgp,
+        g_route_maps,
+    ) = global_policies()
 
     for rs in params.route_servers:
         log.info("Generating combined config file for {}", rs.name)
@@ -70,6 +78,7 @@ async def generate_combined() -> None:
             bgp="\n".join((g_bgp, bgp)),
             prefixes4="\n".join((g_prefixes4, prefixes4)),
             prefixes6="\n".join((g_prefixes6, prefixes6)),
+            route_maps="\n".join((g_route_maps, route_maps)),
             now=datetime.utcnow().isoformat(),
         )
 
