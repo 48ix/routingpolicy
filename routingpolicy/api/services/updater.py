@@ -9,7 +9,7 @@ from rpyc import Service
 
 # Project
 from routingpolicy.log import log
-from routingpolicy.run import policy
+from routingpolicy.run import acls, policy
 
 
 class Updater(Service):
@@ -22,3 +22,10 @@ class Updater(Service):
         results = loop.run_until_complete(policy(wait))
         for result in results:
             yield result
+
+    def exposed_update_acls(self) -> str:
+        """Generate & Update Switch ACLs if needed."""
+        log.info("Received request to update switch ACLs")
+        loop = asyncio.new_event_loop()
+        result = loop.run_until_complete(acls())
+        return result
