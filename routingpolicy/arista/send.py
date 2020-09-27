@@ -14,6 +14,7 @@ from routingpolicy.arista.acl import generate_acl4, generate_acl6
 from routingpolicy.models.switch import Switch
 from routingpolicy.arista.compare import requires_update
 from routingpolicy.models.participant import Participant
+from routingpolicy.slack import send_webhook
 
 
 async def send_acls(  # noqa: C901 your mom's too complex
@@ -110,5 +111,5 @@ async def send_acls(  # noqa: C901 your mom's too complex
         message = "No particiapant ACLs require updates."
     else:
         message = ", ".join(messages)
-
+    await send_webhook("Detail", "Switch ACL Updates", "\n".join(messages))
     return message

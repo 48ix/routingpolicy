@@ -56,7 +56,7 @@ async def send_policy(route_server: RouteServer, wait: int) -> str:
     # message.
     if result:
         log.critical(result)
-        await send_webhook(route_server, result)
+        await send_webhook(route_server.name, "Route Policy Error", result)
         return result
 
     config_file = POLICIES_DIR / route_server.name / "_all.ios"
@@ -84,5 +84,5 @@ async def send_policy(route_server: RouteServer, wait: int) -> str:
 
     # Gracefully close the connection.
     connection.close()
-    await send_webhook(route_server, result)
+    await send_webhook(route_server.name, "Route Policy Update", result)
     return result

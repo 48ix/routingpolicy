@@ -9,24 +9,23 @@ from httpx import AsyncClient
 # Project
 from routingpolicy.log import log
 from routingpolicy.config import params
-from routingpolicy.models.route_server import RouteServer
 
 
-def generate_policy_block(route_server: RouteServer, message: str) -> Dict:
+def generate_policy_block(title: str, summary: str, message: str) -> Dict:
     """Generate a Slack message block."""
     return {
-        "text": route_server.name,
+        "text": summary,
         "blocks": [
             {
                 "type": "header",
-                "text": {"type": "plain_text", "text": "Route Policy Updates"},
+                "text": {"type": "plain_text", "text": summary},
             },
             {"type": "divider"},
             {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
-                    "text": f"*{route_server.name}*",
+                    "text": f"*{title}*",
                 },
             },
             {
@@ -40,10 +39,10 @@ def generate_policy_block(route_server: RouteServer, message: str) -> Dict:
     }
 
 
-async def send_webhook(route_server: RouteServer, message: str) -> None:
+async def send_webhook(title: str, summary: str, message: str) -> None:
     """Send a Slack webhook."""
 
-    generated = generate_policy_block(route_server, message)
+    generated = generate_policy_block(title, summary, message)
 
     log.debug("Generated Slack hook:\n{}", generated)
     try:
