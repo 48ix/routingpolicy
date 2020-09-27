@@ -26,3 +26,14 @@ class Participant(BaseModel):
     def pretty(self) -> str:
         """Generate a pretty display name for the participant."""
         return f"{self.name} ({self.asn.prefixed()})"
+
+    def __eq__(self, other):
+        """Compare two participants based on ASN."""
+        if not isinstance(other, Participant):
+            raise NotImplementedError(f"{repr(other)} is not a Participant")
+
+        return int(self.asn) == int(other.asn)
+
+    def __hash__(self):
+        """Instance hash by participant ASN."""
+        return hash(int(self.asn))

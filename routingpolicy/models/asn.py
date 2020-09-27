@@ -55,6 +55,10 @@ class Asn(int):
         """Stringify ASN."""
         return str(super().__repr__())
 
+    def __int__(self) -> int:
+        """ASN as number."""
+        return self
+
     def __repr__(self) -> str:
         """Represent class with attributes."""
         parts = (
