@@ -3,8 +3,8 @@
 # Standard Library
 import asyncio
 from typing import Tuple, Awaitable, AsyncGenerator
-from ipaddress import ip_network
 from datetime import datetime
+from ipaddress import ip_network
 
 # Project
 from routingpolicy.log import log
