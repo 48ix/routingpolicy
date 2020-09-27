@@ -13,7 +13,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 # Project
 from routingpolicy import APP_DIR
 from routingpolicy.log import log
-from routingpolicy.run import policy
+from routingpolicy.run import policy, acls
 from routingpolicy.config import params
 from routingpolicy.api.main import start_api
 
@@ -50,6 +50,9 @@ if __name__ == "__main__":
 
     # Run Route Policy Updater
     scheduler.add_job(policy, id="policies", trigger=interval)
+
+    # Run Switch ACL Updater
+    scheduler.add_job(acls, id="switch_acls", trigger=interval)
 
     scheduler.start()
     scheduler.print_jobs(out=PrintJobs)
