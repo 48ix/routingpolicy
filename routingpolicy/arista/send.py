@@ -111,5 +111,5 @@ async def send_acls(  # noqa: C901 your mom's too complex
         message = "No particiapant ACLs require updates."
     else:
         message = ", ".join(messages)
-    await send_webhook("Detail", "Switch ACL Updates", "\n".join(messages))
+    await send_webhook("Detail", "Switch ACL Updates", "\n".join(messages) or message)
     return message
