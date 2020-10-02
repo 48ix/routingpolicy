@@ -12,5 +12,6 @@ ipv6 prefix-list bogons6 seq 50 permit fec0::/10 le 128
 ipv6 prefix-list bogons6 seq 55 permit ff00::/8 le 128
 ipv6 prefix-list participant6-in seq 5 deny 2001:504:14::/48
 ipv6 prefix-list participant6-in seq 10 permit ::/0 ge 32 le 48
+ipv6 prefix-list participant6-out seq 5 permit ::/0 ge 32 le 48
 ipv6 prefix-list dfz6 seq 5 permit ::/0 ge 32 le 48
 !
