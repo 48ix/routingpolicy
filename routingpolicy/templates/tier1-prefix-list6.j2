@@ -1,0 +1,7 @@
+! {{ p.name }} (AS{{ p.asn }} - Tier 1) IPv6 Prefix Lists - {{ now }}
+{# IPv6 next-hop prefix-list won't be used until FRR supports prefix-list next-hop matching in route-maps. #}
+{% for addr in p.ipv6 %}
+ipv6 prefix-list ipv6-{{ p.asn }}-nexthop seq {{ loop.index }} permit {{ addr }}/128
+{% endfor %}
+ipv6 prefix-list ipv6-{{ p.asn }} seq 5 permit ::/0 le {{ max_len }}
+!

@@ -1,0 +1,6 @@
+! {{ p.name }} (AS{{ p.asn }} - Tier 1) IPv4 Prefix Lists - {{ now }}
+{% for addr in p.ipv4 %}
+ip prefix-list ipv4-{{ p.asn }}-nexthop seq {{ loop.index }} permit {{ addr }}/32
+{% endfor %}
+ip prefix-list ipv4-{{ p.asn }} seq 5 permit 0.0.0.0/0 le {{ max_len }}
+!
